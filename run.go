@@ -50,7 +50,6 @@ func RunE(
 			if err != nil {
 				return err
 			}
-			fmt.Println(out)
 			fmt.Println(string(data))
 		}
 
