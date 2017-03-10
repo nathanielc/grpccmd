@@ -226,12 +226,12 @@ var _ = grpccmd.RunE
 // Example
 var _ExampleCmd = &cobra.Command{
 	Use:   "example [method]",
-	Short: "A CLI for the proto service Example",
+	Short: "Subcommand for the Example service.",
 }
 
 var _Example_GetNumberCmd = &cobra.Command{
 	Use:   "getNumber",
-	Short: "Make the GetNumber call for the serviceExample",
+	Short: "Make the GetNumber method call, input-type: pb.Empty output-type: pb.Number",
 	RunE: grpccmd.RunE(
 		"GetNumber",
 		"pb.Empty",
@@ -243,7 +243,7 @@ var _Example_GetNumberCmd = &cobra.Command{
 
 var _Example_EchoCmd = &cobra.Command{
 	Use:   "echo",
-	Short: "Make the Echo call for the serviceExample",
+	Short: "Make the Echo method call, input-type: pb.EchoData output-type: pb.EchoData",
 	RunE: grpccmd.RunE(
 		"Echo",
 		"pb.EchoData",

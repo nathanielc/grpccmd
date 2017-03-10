@@ -17,8 +17,8 @@ var addr = new(string)
 var input = new(string)
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(addr, "addr", "", "gRPC server address")
-	rootCmd.PersistentFlags().StringVar(input, "input", "", "JSON representation of the input data for the method")
+	rootCmd.PersistentFlags().StringVar(addr, "addr", "", "gRPC server address.")
+	rootCmd.PersistentFlags().StringVar(input, "input", "", "JSON representation of the input data for the method.")
 }
 
 func SetCmdInfo(name, short, long string) {

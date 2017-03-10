@@ -50,7 +50,7 @@ func (g *grpccmd) Generate(file *generator.FileDescriptor) {
 			serviceCmdVar := fmt.Sprintf("_%sCmd", name)
 			g.P("var ", serviceCmdVar, " = &cobra.Command{")
 			g.P(`Use: "`, lowerFirst(name), ` [method]",`)
-			g.P(`Short: "A CLI for the proto service `, name, `",`)
+			g.P(`Short: "Subcommand for the `, name, ` service.",`)
 			g.P("}")
 			g.P()
 
@@ -60,7 +60,12 @@ func (g *grpccmd) Generate(file *generator.FileDescriptor) {
 				methodVars = append(methodVars, methodCmdVar)
 				g.P("var ", methodCmdVar, " = &cobra.Command{")
 				g.P(`Use: "`, lowerFirst(methodName), `",`)
-				g.P(`Short: "Make the `, methodName, ` call for the service`, name, `",`)
+				g.P(fmt.Sprintf(
+					`Short: "Make the %s method call, input-type: %s output-type: %s",`,
+					methodName,
+					toTypeName(m.GetInputType()),
+					toTypeName(m.GetOutputType()),
+				))
 				g.P(fmt.Sprintf(
 					`RunE: grpccmd.RunE(
 						"%s",

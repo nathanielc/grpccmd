@@ -2,17 +2,27 @@
 
 grpccmd is a CLI generator for any gRPC service in Go.
 While the CLI is written in Go the CLI should be able to talk to any gRPC server in any language.
+The grpccmd is implemented as a plugin to protoc.
+
+## Install
+
+To install the protoc plugin binary run:
+
+```
+go install github.com/nathanielc/grpccmd/cmd/protoc-gen-grpccmd
+```
 
 ## Example
 
-grpccmd is implemented as a plugin to protoc.
-To generate a CLI simply run this command.
+To generate code for a CLI run this command.
 
 ```
 protoc path/to/file.proto --grpccmd_out=.
 ```
 
-Then create a main.go file that references the generated code.
+It is recommended to place the above command as a Go generate comment in a main.go file.
+
+Create a main.go file that references the generated code.
 
 ```go
 package main
@@ -58,4 +68,10 @@ example-rpc --addr localhost:50051 example getNumber
 example-rpc --addr localhost:50051 example echo --input '{"str":"this is a string", "int": 42, "dbl": 6.9, "kv" : {"key":"value"}}'
 ```
 
+
+## Server Code
+
+The grpccmd wraps the normal grpc protoc plugin so the generated code can be used by the server as well.
+Whether you do so is up to you as it is easy enough to generate the code twice, once for the server without grpccmd and once for the client with grpccmd.
+Generating the code twice allows the client and server to be decoupled since they do not have to import the same package.
 
