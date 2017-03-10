@@ -7,7 +7,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/generator"
 	_ "github.com/golang/protobuf/protoc-gen-go/grpc"
-	_ "github.com/nathanielc/grpccli"
+	_ "github.com/nathanielc/grpccmd"
 )
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 		g.Fail("no files to generate")
 	}
 
-	g.CommandLineParameters(g.Request.GetParameter())
+	g.CommandLineParameters("plugins=grpc+grpccmd")
 
 	// Create a wrapped version of the Descriptors and EnumDescriptors that
 	// point to the file that defines them.

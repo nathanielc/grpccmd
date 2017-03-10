@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package pb;
+
+message Empty {};
+
+// Interface exported by the server.
+service Example {
+
+    // GetNumber returns a number
+    rpc GetNumber(Empty) returns (Number) {}
+
+    // Echo returns the same data it receives
+    rpc Echo(EchoData) returns (EchoData) {}
+
+}
+
+message Number {
+    int64 value = 1;
+}
+
+message EchoData {
+    string str = 1;
+    int64  int = 2;
+    double dbl = 3;
+    map<string,string> kv = 4;
+}

@@ -1,4 +1,4 @@
-package grpccli
+package grpccmd
 
 import (
 	"encoding/json"
@@ -11,8 +11,31 @@ import (
 	"google.golang.org/grpc"
 )
 
+var rootCmd = &cobra.Command{}
+
+var addr = new(string)
+var input = new(string)
+
+func init() {
+	rootCmd.PersistentFlags().StringVar(addr, "addr", "", "gRPC server address")
+	rootCmd.PersistentFlags().StringVar(input, "input", "", "JSON representation of the input data for the method")
+}
+
+func SetCmdInfo(name, short, long string) {
+	rootCmd.Use = fmt.Sprintf("%s [command]", name)
+	rootCmd.Short = short
+	rootCmd.Long = long
+}
+
+func RegisterServiceCmd(cmd *cobra.Command) {
+	rootCmd.AddCommand(cmd)
+}
+
+func Execute() error {
+	return rootCmd.Execute()
+}
+
 func RunE(
-	addr, _input *string,
 	method,
 	inT string,
 	newClient func(*grpc.ClientConn) interface{},
@@ -29,8 +52,8 @@ func RunE(
 		if method.IsValid() {
 
 			in := reflect.New(proto.MessageType(inT).Elem()).Interface()
-			if len(*_input) > 0 {
-				if err := json.Unmarshal([]byte(*_input), in); err != nil {
+			if len(*input) > 0 {
+				if err := json.Unmarshal([]byte(*input), in); err != nil {
 					return err
 				}
 			}
