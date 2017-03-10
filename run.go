@@ -1,6 +1,7 @@
 package grpccli
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 
@@ -11,9 +12,9 @@ import (
 )
 
 func RunE(
-	addr *string,
+	addr, _input *string,
 	method,
-	inT, outT string,
+	inT string,
 	newClient func(*grpc.ClientConn) interface{},
 ) func(*cobra.Command, []string) error {
 	return func(cmd *cobra.Command, args []string) error {
@@ -27,21 +28,30 @@ func RunE(
 		method := cv.MethodByName(method)
 		if method.IsValid() {
 
-			in := reflect.New(proto.MessageType(inT).Elem())
+			in := reflect.New(proto.MessageType(inT).Elem()).Interface()
+			if len(*_input) > 0 {
+				if err := json.Unmarshal([]byte(*_input), in); err != nil {
+					return err
+				}
+			}
 
 			result := method.Call([]reflect.Value{
 				reflect.ValueOf(context.Background()),
-				in,
+				reflect.ValueOf(in),
 			})
 			if len(result) != 2 {
 				panic("service methods should always return 2 values")
 			}
-			err := result[1].Interface().(error)
+			if !result[1].IsNil() {
+				return result[1].Interface().(error)
+			}
+			out := result[0].Interface()
+			data, err := json.MarshalIndent(out, "", "    ")
 			if err != nil {
 				return err
 			}
-			out := result[0].Interface()
 			fmt.Println(out)
+			fmt.Println(string(data))
 		}
 
 		return nil

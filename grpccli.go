@@ -42,6 +42,7 @@ func (g *grpccli) Generate(file *generator.FileDescriptor) {
 
 	g.P("var _ = grpccli.RunE")
 	g.P("var _grpcAddr = new(string)")
+	g.P("var _grpcInput = new(string)")
 
 	g.P(`
 	var RootCmd = &cobra.Command{
@@ -52,6 +53,7 @@ func (g *grpccli) Generate(file *generator.FileDescriptor) {
 
 	g.P("func init() {")
 	g.P(`RootCmd.PersistentFlags().StringVar(_grpcAddr, "addr", "", "gRPC server address")`)
+	g.P(`RootCmd.PersistentFlags().StringVar(_grpcInput, "input", "", "json representation of the input struct for the method")`)
 	g.P("}")
 	g.P()
 
@@ -78,7 +80,7 @@ func (g *grpccli) Generate(file *generator.FileDescriptor) {
 				g.P(fmt.Sprintf(
 					`RunE: grpccli.RunE(
 						_grpcAddr, 
-						"%s",
+						_grpcInput,
 						"%s",
 						"%s",
 						func(c *grpc.ClientConn) interface{} {
@@ -87,7 +89,6 @@ func (g *grpccli) Generate(file *generator.FileDescriptor) {
 				),`,
 					methodName,
 					toTypeName(m.GetInputType()),
-					toTypeName(m.GetOutputType()),
 					name,
 				))
 				g.P("}")
