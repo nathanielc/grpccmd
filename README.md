@@ -9,7 +9,7 @@ The grpccmd is implemented as a plugin to protoc.
 To install the protoc plugin binary run:
 
 ```
-go install github.com/nathanielc/grpccmd/cmd/protoc-gen-grpccmd
+go get -u github.com/nathanielc/grpccmd/cmd/protoc-gen-grpccmd
 ```
 
 ## Example
